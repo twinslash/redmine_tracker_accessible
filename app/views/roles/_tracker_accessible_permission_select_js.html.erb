@@ -1,0 +1,5 @@
+<%= javascript_tag do %>
+  $('#content form div.box.tabular:first p:last').ready(function() {
+    $('#content form div.box.tabular:first').append("<%= escape_javascript render('tracker_accessible_permission_select_html') %>");
+  })
+<% end %>
