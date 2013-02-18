@@ -1,3 +1,5 @@
+require 'redmine_tracker_accessible'
+
 Redmine::Plugin.register :redmine_tracker_accessible do
   name        'Redmine Tracker Accessible plugin'
   author      '//Twinslash'

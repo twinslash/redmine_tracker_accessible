@@ -1,0 +1,8 @@
+<h2><%= link_to l(:label_role_plural), roles_path %> &#187; <%=h @role.name %></h2>
+
+<%= render :partial => 'tracker_accessible_permission_select' %>
+
+<%= labelled_form_for @role do |f| %>
+<%= render :partial => 'form', :locals => { :f => f } %>
+<%= submit_tag l(:button_save) %>
+<% end %>
