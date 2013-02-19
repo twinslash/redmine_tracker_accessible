@@ -17,12 +17,7 @@ module RedmineTrackerAccessible
       # define @issue.project.trackers according to settings
       def tracker_accessible_build_allowed_trackers
         tracker_ids = tracker_accessible_allowed_tracker_ids
-        # find trackers by ids or use all trackers (if permission is not set up)
-        @issue.project.trackers = if tracker_ids.any?
-          Tracker.where(:id => tracker_ids).order("#{Tracker.table_name}.position")
-        else
-          Tracker.scoped
-        end
+        @issue.project.trackers = Tracker.where(:id => tracker_ids).order("#{Tracker.table_name}.position")
       end
 
       # nullify tracker_id if it is not allowed
@@ -39,11 +34,16 @@ module RedmineTrackerAccessible
       # or
       # all trackers if this permission is not set up
       def tracker_accessible_allowed_tracker_ids
+        tracker_all = Tracker.pluck(:id)
         # join trackers from permissions
-        tracker_ids = User.current.roles_for_project(@project).map(&:tracker_accessible_permission)
-        tracker_ids = tracker_ids.flatten.delete_if(&:blank?).uniq
+        tracker_ids = User.current.roles_for_project(@project).map do |role|
+          ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
+          # if ids is empty it seems that Permission is not set up - use all trackers
+          ids.any? ? ids : tracker_all
+        end
+
+        tracker_ids = tracker_ids.flatten.uniq
         # add current issue's tracker if issue exists and tracker_ids contains smth
-        # if tracker_ids is empty it seems that Permission is not set up and Tracker.scoped will be used
         tracker_ids << @issue.tracker_id_was if @issue.persisted? && tracker_ids.any?
         tracker_ids
       end
