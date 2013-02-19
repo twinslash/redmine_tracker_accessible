@@ -1,7 +1,6 @@
 # Redmine tracker accessible
 
-Плагин позволяет настроить доступные трекеры для роли. Пользователи не смогут создать задачу не в выбранном статусе.
-
+Плагин позволяет настроить доступные трекеры для роли. Пользователи могут создать задачу только в указанных трекерах.
 
 ## Установка
 
@@ -13,18 +12,18 @@ cd REDMINE/plugins
 git clone https://github.com/twinslash/redmine_tracker_accessible.git
 bundle exec rake redmine:plugins:migrate NAME=redmine_tracker_accessible
 ```
+Перестартуйте ваш сервер.
 
 
 ## Удаление
 
 Откатите миграции. Удалите плагин
-
-Для установки плагина нужно зайти в директорию plugins/ и клонировать репозиторий из Github:
 ```bash
 cd REDMINE/plugins
 bundle exec rake redmine:plugins:migrate NAME=redmine_tracker_accessible VERSION=0
 rm redmine_tracker_accessible -rf
 ```
+Перестартуйте ваш сервер.
 
 
 ## Использование
