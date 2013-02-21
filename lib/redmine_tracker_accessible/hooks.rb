@@ -11,7 +11,7 @@ module RedmineTrackerAccessible
 
       "<script type='text/javascript'>
         $('select#issue_tracker_id').ready(function() {
-          $('select#issue_tracker_id').html('#{escape_javascript(options_for_select(@allowed_trackers.collect { |t| [t.name, t.id] }))}')
+          $('select#issue_tracker_id').html('#{escape_javascript(options_for_select(@allowed_trackers.collect { |t| [t.name, t.id] }, @issue.tracker_id))}');
         })
       </script>"
     end
