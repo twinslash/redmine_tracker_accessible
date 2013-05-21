@@ -16,7 +16,7 @@ module RedmineTrackerAccessible
       # nullify tracker_id if it is not allowed
       def tracker_accessible_check_tracker_id
         tracker_ids = tracker_accessible_allowed_tracker_ids
-        if tracker_ids.exclude?(@issue.tracker_id)
+        if @issue.tracker_id_changed? && tracker_ids.exclude?(@issue.tracker_id)
           @issue.tracker_id = nil
         end
       end
