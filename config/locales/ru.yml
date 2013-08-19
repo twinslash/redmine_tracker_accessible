@@ -1,2 +1,3 @@
 ru:
   label_tracker_accessible_permissions: "Доступные трекеры"
+  label_issues_tracker_accessible_watcher: 'Задачи в доступных трекерах'
