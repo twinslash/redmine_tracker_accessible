@@ -1,0 +1,4 @@
+v 0.0.2
+  - add option for visibility based on trackers
+v 0.0.1 (basic functionality)
+  - user can create issues only in available trackers
