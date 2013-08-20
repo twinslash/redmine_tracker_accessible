@@ -56,7 +56,7 @@ module TrackerAccessibleIssuePatch
         # move logic for patching logic in separate method in order to avoid possible conflicts with another plugins
 
         # Returns true if usr or current user is allowed to view the issue's show page
-        def visible?(usr=nil, par = false)
+        def visible?(usr=nil)
           (usr || User.current).allowed_to?(:view_issues, self.project) do |role, user|
             visible_block(role, user)
           end
@@ -87,7 +87,7 @@ module TrackerAccessibleIssuePatch
           tracker_ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
           tracker_ids.include?(tracker_id)
         else
-          visible_block_without_issues_visibility(role, user)
+          visible_block_without_tracker_accessible(role, user)
         end
       end
       # use alias_method_chain to have origin methods and patched ones.
