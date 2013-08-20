@@ -62,6 +62,7 @@ module TrackerAccessibleIssuePatch
           end
         end
 
+        # this is origin logic which is moved in separate method for patching purposes
         def visible_block(role, user)
           if user.logged?
             case role.issues_visibility
