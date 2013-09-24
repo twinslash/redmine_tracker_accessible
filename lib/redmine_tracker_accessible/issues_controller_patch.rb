@@ -6,7 +6,7 @@ module RedmineTrackerAccessible
 
       base.class_eval do
 
-        before_filter :tracker_accessible_check_tracker_id, :only => [:create, :update]
+        before_filter :tracker_accessible_check_tracker_id, :only => [:new, :create, :update]
 
       end
     end
