@@ -5,9 +5,8 @@ module RedmineTrackerAccessible
       base.send(:include, InstanceMethods)
 
       base.class_eval do
-
         before_filter :tracker_accessible_check_tracker_id, :only => [:new, :create, :update]
-
+        alias_method_chain :build_new_issue_from_params, :tracker_accessible
       end
     end
 
@@ -27,21 +26,38 @@ module RedmineTrackerAccessible
       # or
       # all trackers for this project if this permission is not set up
       def tracker_accessible_allowed_tracker_ids
-        # all possible trackers for this project
-        tracker_all = @project.trackers.pluck(:id)
         # join trackers from permissions
-        tracker_ids = User.current.roles_for_project(@project).map do |role|
-          ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
-          # if ids is empty it seems that Permission is not set up - use all trackers
-          # if ids then take intersection with tracker_all
-          ids.any? ? ids & tracker_all : tracker_all
-        end
+        tracker_ids = get_tracker_ids
 
         tracker_ids = tracker_ids.flatten.uniq
         # add current issue's tracker if issue exists and tracker_ids contains smth
         tracker_ids << @issue.tracker_id_was if @issue.persisted? && tracker_ids.any?
         tracker_ids
       end
+
+      # default params[:tracker_id] is taken from project settings @project.trackers.first
+      # fields (defined by permissions) to display on the form are based on this value
+      # predefine params[:tracker_id] with value according plugin settings
+      def build_new_issue_from_params_with_tracker_accessible
+        params[:tracker_id] ||= get_tracker_ids.first
+        build_new_issue_from_params_without_tracker_accessible
+      end
+
+      private
+
+        # join trackers from permissions
+        def get_tracker_ids
+          # all possible trackers for this project
+          tracker_all = @project.trackers.pluck(:id)
+
+          @tracker_ids = User.current.roles_for_project(@project).map do |role|
+            ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
+            # if ids is empty it seems that Permission is not set up - use all trackers
+            # if ids then take intersection with tracker_all
+            ids.any? ? (ids & tracker_all) : tracker_all
+          end
+          @tracker_ids.flatten.uniq.sort
+        end
 
     end
   end
