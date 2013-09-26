@@ -38,7 +38,12 @@ module TrackerAccessibleIssuePatch
       def self.visible_condition_block_with_tracker_accessible(role, user)
         if user.logged? && role.issues_visibility == 'issues_tracker_accessible'
           tracker_ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
-          "(#{table_name}.tracker_id IN (#{tracker_ids.join(',')}))"
+          if tracker_ids.any?
+            "(#{table_name}.tracker_id IN (#{tracker_ids.join(',')}))"
+          else
+            # no accessible trackers - no issue access (show nothing)
+            "(#{table_name}.tracker_id is NULL)"
+          end
         else
           visible_condition_block_without_tracker_accessible(role, user)
         end

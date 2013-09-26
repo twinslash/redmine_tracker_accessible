@@ -52,9 +52,8 @@ module RedmineTrackerAccessible
 
           @tracker_ids = User.current.roles_for_project(@project).map do |role|
             ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
-            # if ids is empty it seems that Permission is not set up - use all trackers
-            # if ids then take intersection with tracker_all
-            ids.any? ? (ids & tracker_all) : tracker_all
+            # use intersection ids and tracker_all
+            ids & tracker_all
           end
           @tracker_ids.flatten.uniq.sort
         end
