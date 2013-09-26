@@ -1,5 +1,14 @@
 <%= javascript_tag do %>
+
   $('#content form div.box.tabular:first p:last').ready(function() {
     $('#content form div.box.tabular:first').append("<%= escape_javascript render('tracker_accessible_permission_select_html') %>");
   })
+
+  function hide_show_trackers() {
+    $('#issues_tracker_accessible_multiselect').toggle($('#role_issues_visibility option:selected').val() == 'issues_tracker_accessible', 100000);
+  }
+
+  $(document).ready(function(){
+    $('#role_issues_visibility').on('change', hide_show_trackers);
+  });
 <% end %>
