@@ -1,0 +1,12 @@
+<% if User.current.allowed_to?(:tracker_accessible_extra_issue_access, @project) %>
+  <div class="contextual">
+    <%= link_to l(:button_add),
+          {:controller => 'extra_issue_access', :action => 'new', :issue_id => issue.id},
+          :remote => true,
+          :method => 'get' %>
+  </div>
+<% end %>
+
+<h3><%= l(:label_issue_extra_access) %> (<%= issue.extra_access_users.size %>)</h3>
+
+<%= extra_accessed_list(issue) %>

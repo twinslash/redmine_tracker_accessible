@@ -1,0 +1,5 @@
+<% if User.current.allowed_to?(:tracker_accessible_extra_issue_access, @project) || @issue.extra_access_users.present? %>
+  <div id='extra-issue-access'>
+    <%= render :partial => 'extra_issue_access/extra_issue_access', :locals => {:issue => @issue} %>
+  </div>
+<% end %>

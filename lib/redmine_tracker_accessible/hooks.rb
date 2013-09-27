@@ -16,6 +16,21 @@ module RedmineTrackerAccessible
       </script>"
     end
 
+    def view_layouts_base_html_head(context={})
+      if context[:controller] && (context[:controller].is_a?(IssuesController))
+        stylesheet_link_tag("tracker_accessible.css", :plugin => "redmine_tracker_accessible", :media => "screen")
+      else
+        ''
+      end
+    end
+
+    def view_issues_sidebar_queries_bottom(context={})
+      @issue = context[:issue]
+      @project = context[:project]
+
+      context[:controller].send(:render, { :partial => "extra_issue_access/siderbar_for_extra_access" })
+    end
+
   end
 
 end

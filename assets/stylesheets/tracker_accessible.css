@@ -1,0 +1,14 @@
+#extra-issue-access ul {margin: 0;  padding: 0;}
+#extra-issue-access li {list-style-type:none;margin: 0px 2px 0px 0px; padding: 0px 0px 0px 0px;}
+#extra-issue-access select {width: 95%; display: block;}
+#extra-issue-access a.delete {opacity: 0.4; vertical-align: middle;}
+#extra-issue-access a.delete:hover {opacity: 1;}
+#extra-issue-access img.gravatar {margin: 0 4px 2px 0;}
+
+span#extra-access_inputs {overflow:auto; display:block;}
+span.search_for_extra-access {display:block;}
+span.search_for_extra-access, span.add_attachment {font-size:80%; line-height:2.5em;}
+span.search_for_extra-access a, span.add_attachment a {padding-left:16px; background: url(../images/bullet_add.png) no-repeat 0 50%; }
+
+#users_for_extra_access {height: 200px; overflow:auto;}
+#users_for_extra_access label {display: block;}

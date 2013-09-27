@@ -7,6 +7,10 @@ module RedmineTrackerAccessible
       base.class_eval do
         before_filter :tracker_accessible_check_tracker_id, :only => [:new, :create, :update]
         alias_method_chain :build_new_issue_from_params, :tracker_accessible
+
+        helper :extra_access
+        include ExtraAccessHelper
+
       end
     end
 

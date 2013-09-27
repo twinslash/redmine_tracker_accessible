@@ -7,4 +7,9 @@ Redmine::Plugin.register :redmine_tracker_accessible do
   version     '0.0.2'
   url         'https://github.com/twinslash/redmine_tracker_accessible'
   author_url  'http://twinslash.com'
+
+  project_module :issue_tracking do
+    permission :tracker_accessible_extra_issue_access, { :extra_issue_access => [:new, :create, :destroy, :autocomplete_for_user] }
+  end
+
 end

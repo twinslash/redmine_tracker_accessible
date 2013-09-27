@@ -1,0 +1,4 @@
+$('#ajax-modal').html('<%= escape_javascript(render :partial => 'extra_issue_access/new', :locals => {:issue => @issue}) %>');
+showModal('ajax-modal', '400px');
+// $('#ajax-modal').addClass('new-watcher');
+$('#ajax-modal').addClass('new-extra-issue-access');

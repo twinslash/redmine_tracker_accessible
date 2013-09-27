@@ -1,3 +1,6 @@
 ru:
   label_tracker_accessible_permissions: "Доступные трекеры"
   label_issues_tracker_accessible_watcher: 'Задачи в доступных трекерах'
+  label_issue_extra_access: 'Спец. доступ к задаче'
+  permission_add_extra_issue_access: 'Добавить спец. доступ к задаче'
+  permission_tracker_accessible_extra_issue_access: 'Управление спец. доступом к задаче'

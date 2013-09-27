@@ -2,6 +2,9 @@ module TrackerAccessibleIssuePatch
   def self.included(base)
 
     base.class_eval do
+      has_many :tracker_accessible_issue_permissions, :dependent => :destroy
+      has_many :extra_access_users, :through => :tracker_accessible_issue_permissions, :source => :user
+
       # ========= start patch visible_condition =========
       unless Issue.respond_to?(:visible_condition_block)
         # move logic for patching logic in separate method in order to avoid possible conflicts with another plugins

@@ -1,0 +1,2 @@
+$('#ajax-modal').html('<%= escape_javascript(render(:partial => 'extra_issue_access/new', :locals => {:issue => @issue})) %>');
+$('#extra-issue-access').html('<%= escape_javascript(render(:partial => 'extra_issue_access/extra_issue_access', :locals => {:issue => @issue})) %>');
