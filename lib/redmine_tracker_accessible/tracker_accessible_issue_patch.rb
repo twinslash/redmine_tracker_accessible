@@ -40,13 +40,7 @@ module TrackerAccessibleIssuePatch
       # patch for visible_condition_block
       def self.visible_condition_block_with_tracker_accessible(role, user)
         if user.logged? && role.issues_visibility == 'issues_tracker_accessible'
-          tracker_ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
-          if tracker_ids.any?
-            "(#{table_name}.tracker_id IN (#{tracker_ids.join(',')}))"
-          else
-            # no accessible trackers - no issue access (show nothing)
-            "(#{table_name}.tracker_id is NULL)"
-          end
+          [tracker_conditions(role), owner_conditions(user), extra_access_conditions(user)].join(' OR ')
         else
           visible_condition_block_without_tracker_accessible(role, user)
         end
@@ -93,7 +87,12 @@ module TrackerAccessibleIssuePatch
       def visible_block_with_tracker_accessible(role, user)
         if user.logged? && role.issues_visibility == 'issues_tracker_accessible'
           tracker_ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
-          tracker_ids.include?(tracker_id)
+          # build a condition
+          tracker_ids.include?(tracker_id) || # issue in predefined (by role) trackers
+            author == user || # user is author
+            user.is_or_belongs_to?(assigned_to) || # user is assign_to issue
+            watchers.map(&:user_id).include?(user.id) || # user is watcher
+            extra_access_user_ids.include?(user.id) # user has extra access
         else
           visible_block_without_tracker_accessible(role, user)
         end
@@ -102,6 +101,35 @@ module TrackerAccessibleIssuePatch
       # it will help to patch origin logic in other places (=plugins)
       alias_method_chain :visible_block, :tracker_accessible
       # ========= end patch visible =========
+
+      private
+
+        # user should see issues in predefined (by role) trackers
+        def self.tracker_conditions(role)
+          tracker_ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
+          if tracker_ids.any?
+            "(#{table_name}.tracker_id IN (#{tracker_ids.join(',')}))"
+          else
+            # no accessible trackers - no issue access (show nothing)
+            "(#{table_name}.tracker_id is NULL)"
+          end
+        end
+
+        # user should see issues if he is author or it is assigned to him
+        def self.owner_conditions(user)
+            user_ids = [user.id] + user.groups.map(&:id)
+            "(#{table_name}.author_id = #{user.id} OR #{table_name}.assigned_to_id IN (#{user_ids.join(',')}))"
+        end
+
+        # user should see issues if he has an extra access
+        def self.extra_access_conditions(user)
+          if (extra_access_issue_ids = TrackerAccessibleIssuePermission.where(user_id: user).pluck(:issue_id)).any?
+            "(#{table_name}.id IN (#{extra_access_issue_ids.join(',')}))"
+          else
+            '1=0'
+          end
+        end
+
     end
 
   end
