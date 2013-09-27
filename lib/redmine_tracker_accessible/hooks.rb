@@ -25,10 +25,14 @@ module RedmineTrackerAccessible
     end
 
     def view_issues_sidebar_queries_bottom(context={})
-      @issue = context[:issue]
-      @project = context[:project]
+      if context[:controller].controller_name == 'issues' && context[:controller].action_name == 'show'
+        @issue = context[:issue]
+        @project = context[:project]
 
-      context[:controller].send(:render, { :partial => "extra_issue_access/siderbar_for_extra_access" })
+        context[:controller].send(:render, { :partial => "extra_issue_access/siderbar_for_extra_access" })
+      else
+        ''
+      end
     end
 
   end
