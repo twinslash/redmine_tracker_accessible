@@ -18,6 +18,7 @@ module RedmineTrackerAccessible
 
       # nullify tracker_id if it is not allowed
       def tracker_accessible_check_tracker_id
+        return unless tracker_accessible_patch_work?
         tracker_ids = tracker_accessible_allowed_tracker_ids
         if @issue.tracker_id_changed? && tracker_ids.exclude?(@issue.tracker_id)
           @issue.tracker_id = nil
@@ -33,7 +34,6 @@ module RedmineTrackerAccessible
         # join trackers from permissions
         tracker_ids = get_tracker_ids
 
-        tracker_ids = tracker_ids.flatten.uniq
         # add current issue's tracker if issue exists and tracker_ids contains smth
         tracker_ids << @issue.tracker_id_was if @issue.persisted? && tracker_ids.any?
         tracker_ids
@@ -43,7 +43,9 @@ module RedmineTrackerAccessible
       # fields (defined by permissions) to display on the form are based on this value
       # predefine params[:tracker_id] with value according plugin settings
       def build_new_issue_from_params_with_tracker_accessible
-        params[:tracker_id] ||= get_tracker_ids.first
+        if tracker_accessible_patch_work?
+          params[:tracker_id] ||= get_tracker_ids.first
+        end
         build_new_issue_from_params_without_tracker_accessible
       end
 
@@ -59,7 +61,16 @@ module RedmineTrackerAccessible
             # use intersection ids and tracker_all
             ids & tracker_all
           end
-          @tracker_ids.flatten.uniq.sort
+          @tracker_ids.flatten.uniq
+        end
+
+        # logic is applied only if all user roles have 'issues_tracker_accessible' permission
+        def tracker_accessible_patch_work?
+          if @tracker_accessible_patch_work.nil?
+            @tracker_accessible_patch_work = User.current.roles_for_project(@project).map(&:issues_visibility).uniq == ['issues_tracker_accessible']
+          else
+            @tracker_accessible_patch_work
+          end
         end
 
     end
