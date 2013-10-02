@@ -1,6 +1,8 @@
 <h2><%= link_to l(:label_role_plural), roles_path %> &#187; <%=l(:label_role_new)%></h2>
 
+<% # START patch %>
 <%= render :partial => 'tracker_accessible_permission_select_js' %>
+<% # END patch %>
 
 <%= labelled_form_for @role do |f| %>
 <%= render :partial => 'form', :locals => { :f => f } %>

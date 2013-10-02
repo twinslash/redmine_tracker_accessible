@@ -1,7 +1,21 @@
-<div id='issues_tracker_accessible_multiselect' style="<%= @role.issues_visibility != 'issues_tracker_accessible' ? 'display: none' : ''%>">
-  <p>
-    <%= hidden_field_tag 'role[tracker_accessible_permission][]', nil %>
-    <label for="role_tracker_accessible_permission"><%= l(:label_tracker_accessible_permissions) %></label>
-    <%= select_tag 'role[tracker_accessible_permission]', options_for_select(Tracker.order(:position).all.map { |t| [t.name, t.id] }, @role['tracker_accessible_permission']), :multiple => true, :style => "width: 150px; height: 150px;" %>
-  </p>
+<div class='tracker_accessible_settings'>
+
+  <div id="issue_tracker_accessible">
+    <p>
+      <%= hidden_field_tag 'role[issue_accessible_by_tracker_permission][]', nil %>
+      <label for="role_issue_accessible_by_tracker_permission"><%= l(:label_issue_accessible_by_tracker_permission) %></label>
+      <%= select_tag 'role[issue_accessible_by_tracker_permission]', options_for_select(Tracker.order(:position).all.map { |t| [t.name, t.id] }, @role['issue_accessible_by_tracker_permission']), :multiple => true, :style => "width: 150px; height: 150px;" %>
+    </p>
+  </div>
+
+  <div id="tracker_accessible" style="<%= @role.issues_visibility != 'issues_tracker_accessible' ? 'display: none' : ''%>">
+    <p>
+      <%= hidden_field_tag 'role[tracker_accessible_permission][]', nil %>
+      <label for="role_tracker_accessible_permission"><%= l(:label_tracker_accessible_permissions) %></label>
+      <%= select_tag 'role[tracker_accessible_permission]', options_for_select(Tracker.order(:position).all.map { |t| [t.name, t.id] }, @role['tracker_accessible_permission']), :multiple => true, :style => "width: 150px; height: 150px;" %>
+    </p>
+  </div>
+
+  <div class="clear"></div>
+
 <div>

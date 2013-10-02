@@ -86,7 +86,7 @@ module TrackerAccessibleIssuePatch
       # patch for visible_block
       def visible_block_with_tracker_accessible(role, user)
         if user.logged? && role.issues_visibility == 'issues_tracker_accessible'
-          tracker_ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
+          tracker_ids = role.issue_accessible_by_tracker_permission.map(&:to_i).delete_if(&:zero?)
           # build a condition
           tracker_ids.include?(tracker_id) || # issue in predefined (by role) trackers
             author == user || # user is author
@@ -106,7 +106,7 @@ module TrackerAccessibleIssuePatch
 
         # user should see issues in predefined (by role) trackers
         def self.tracker_conditions(role)
-          tracker_ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
+          tracker_ids = role.issue_accessible_by_tracker_permission.map(&:to_i).delete_if(&:zero?)
           if tracker_ids.any?
             "(#{table_name}.tracker_id IN (#{tracker_ids.join(',')}))"
           else

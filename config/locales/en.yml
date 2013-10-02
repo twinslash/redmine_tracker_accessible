@@ -2,5 +2,6 @@ en:
   label_tracker_accessible_permissions: "Acessible trackers"
   label_issues_tracker_accessible_watcher: 'Issues with accessible trackers'
   label_issue_extra_access: 'Extra access to issue'
+  label_issue_accessible_by_tracker_permission: 'Issue accessible by tracker'
   permission_add_extra_issue_access: 'Add extra issue access'
   permission_tracker_accessible_extra_issue_access: 'Manage of extra issue access'

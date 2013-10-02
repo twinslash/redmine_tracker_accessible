@@ -4,6 +4,7 @@ module TrackerAccessibleRolePatch
 
     base.class_eval do
       serialize :tracker_accessible_permission, Array
+      serialize :issue_accessible_by_tracker_permission, Array
 
       Role::ISSUES_VISIBILITY_OPTIONS << ['issues_tracker_accessible', :label_issues_tracker_accessible_watcher]
       validate :supress_error_caused_inclusion_validation_for_issues_visibility
