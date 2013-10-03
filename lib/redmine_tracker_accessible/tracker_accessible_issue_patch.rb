@@ -39,8 +39,15 @@ module TrackerAccessibleIssuePatch
 
       # patch for visible_condition_block
       def self.visible_condition_block_with_tracker_accessible(role, user)
-        if user.logged? && role.issues_visibility == 'issues_tracker_accessible'
-          [tracker_conditions(role), owner_conditions(user), extra_access_conditions(user)].join(' OR ')
+        if user.logged?
+          # prepend extra access condition
+          condition = [owner_conditions(user), extra_access_conditions(user)]
+          if role.issues_visibility == 'issues_tracker_accessible'
+            condition << tracker_conditions(role)
+          else
+            condition << visible_condition_block_without_tracker_accessible(role, user)
+          end
+          condition.join (' OR ')
         else
           visible_condition_block_without_tracker_accessible(role, user)
         end
@@ -85,14 +92,21 @@ module TrackerAccessibleIssuePatch
 
       # patch for visible_block
       def visible_block_with_tracker_accessible(role, user)
-        if user.logged? && role.issues_visibility == 'issues_tracker_accessible'
-          tracker_ids = role.issue_accessible_by_tracker_permission.map(&:to_i).delete_if(&:zero?)
-          # build a condition
-          tracker_ids.include?(tracker_id) || # issue in predefined (by role) trackers
-            author == user || # user is author
+        if user.logged?
+          # conditions for extra access
+          condition = (author == user) || # user is author
             user.is_or_belongs_to?(assigned_to) || # user is assign_to issue
             watchers.map(&:user_id).include?(user.id) || # user is watcher
             extra_access_user_ids.include?(user.id) # user has extra access
+
+          if role.issues_visibility == 'issues_tracker_accessible'
+            tracker_ids = role.issue_accessible_by_tracker_permission.map(&:to_i).delete_if(&:zero?)
+            # build a condition
+            condition ||= tracker_ids.include?(tracker_id) # issue in predefined (by role) trackers
+          else
+            condition ||= visible_block_without_tracker_accessible(role, user)
+          end
+          condition
         else
           visible_block_without_tracker_accessible(role, user)
         end
