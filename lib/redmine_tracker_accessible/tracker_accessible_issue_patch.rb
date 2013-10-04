@@ -96,7 +96,6 @@ module TrackerAccessibleIssuePatch
           # conditions for extra access
           condition = (author == user) || # user is author
             user.is_or_belongs_to?(assigned_to) || # user is assign_to issue
-            watchers.map(&:user_id).include?(user.id) || # user is watcher
             extra_access_user_ids.include?(user.id) # user has extra access
 
           if role.issues_visibility == 'issues_tracker_accessible'
