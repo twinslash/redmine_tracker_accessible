@@ -47,7 +47,7 @@ module TrackerAccessibleIssuePatch
           else
             condition << visible_condition_block_without_tracker_accessible(role, user)
           end
-          condition.join (' OR ')
+          condition.delete_if(&:blank?).join (' OR ')
         else
           visible_condition_block_without_tracker_accessible(role, user)
         end
