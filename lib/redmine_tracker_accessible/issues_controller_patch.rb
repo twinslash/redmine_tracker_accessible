@@ -52,9 +52,14 @@ module RedmineTrackerAccessible
           tracker_all = @project.trackers.pluck(:id)
 
           @tracker_ids = User.current.roles_for_project(@project).map do |role|
-            ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
-            # use intersection ids and tracker_all
-            ids & tracker_all
+            if role.allow_all_trackers_permission?
+              # use all trackers if flag is enabled
+              tracker_all
+            else
+              ids = role.tracker_accessible_permission.map(&:to_i).delete_if(&:zero?)
+              # use intersection ids and tracker_all
+              ids & tracker_all
+            end
           end
           @tracker_ids.flatten.uniq
         end

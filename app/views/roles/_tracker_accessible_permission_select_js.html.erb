@@ -8,7 +8,22 @@
     $('#issue_tracker_accessible').toggle($('#role_issues_visibility option:selected').val() == 'issues_tracker_accessible', 100000);
   }
 
+  function enable_disable_accessible_trackers() {
+    if ($('#role_allow_all_trackers_permission').is(":checked")){
+      prop = 'disabled';
+    } else {
+      prop = false;
+    }
+    $('#role_tracker_accessible_permission').prop('disabled', prop);
+  }
+
   $(document).ready(function(){
     $('#role_issues_visibility').on('change', hide_show_trackers);
   });
+
+  $(document).ready(function(){
+    $('#role_allow_all_trackers_permission').on('change', enable_disable_accessible_trackers);
+    enable_disable_accessible_trackers();
+  });
+
 <% end %>

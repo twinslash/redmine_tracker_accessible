@@ -1,6 +1,13 @@
 <div class='tracker_accessible_settings'>
 
+  <p>
+    <%= hidden_field_tag 'role[allow_all_trackers_permission]', false, :id => nil %>
+    <label for="role_allow_all_trackers_permission"><%= l(:label_allow_all_trackers_permissions) %></label>
+    <%= check_box_tag 'role[allow_all_trackers_permission]', true, @role['allow_all_trackers_permission'] %>
+  </p>
+
   <div id="tracker_accessible">
+
     <p>
       <%= hidden_field_tag 'role[tracker_accessible_permission][]', nil %>
       <label for="role_tracker_accessible_permission"><%= l(:label_tracker_accessible_permissions) %></label>
