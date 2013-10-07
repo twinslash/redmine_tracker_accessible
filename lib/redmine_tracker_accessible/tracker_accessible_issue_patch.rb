@@ -122,6 +122,16 @@ module TrackerAccessibleIssuePatch
       alias_method_chain :visible_block, :tracker_accessible
       # ========= end patch visible =========
 
+      # notify users who have extra access and has mail_notification as 'only_my_events'
+      def notified_users_with_tracker_accessible
+        # add notifiers if their settings for mail_notification are 'only_my_events'
+        # Notifiers with mail_notification settings as 'selected' and 'all' will be added in the core
+        notified = extra_access_users.select { |u| u.active? && u.mail_notification == 'only_my_events' }
+        core_notified = notified_users_without_tracker_accessible
+        (core_notified + notified).uniq
+      end
+      alias_method_chain :notified_users, :tracker_accessible
+
       private
 
         # user should see issues in predefined (by role) trackers
