@@ -40,14 +40,18 @@ module TrackerAccessibleIssuePatch
       # patch for visible_condition_block
       def self.visible_condition_block_with_tracker_accessible(role, user)
         if user.logged?
-          # prepend extra access condition
-          condition = [owner_conditions(user), extra_access_conditions(user)]
+          condition = []
+          # prepend extra access condition if role with limited access to issues
+          if ['own', 'issues_tracker_accessible'].include?(role.issues_visibility)
+            condition << [owner_conditions(user), extra_access_conditions(user)]
+          end
           if role.issues_visibility == 'issues_tracker_accessible'
             condition << tracker_conditions(role)
           else
             condition << visible_condition_block_without_tracker_accessible(role, user)
           end
-          condition.delete_if(&:blank?).join (' OR ')
+          condition = condition.flatten.delete_if(&:blank?).join(' OR ')
+          condition.blank? ? nil : condition
         else
           visible_condition_block_without_tracker_accessible(role, user)
         end
@@ -93,10 +97,13 @@ module TrackerAccessibleIssuePatch
       # patch for visible_block
       def visible_block_with_tracker_accessible(role, user)
         if user.logged?
-          # conditions for extra access
-          condition = (author == user) || # user is author
-            user.is_or_belongs_to?(assigned_to) || # user is assign_to issue
-            extra_access_user_ids.include?(user.id) # user has extra access
+          condition = false
+          # conditions for extra access if role with limited access to issues
+          if ['own', 'issues_tracker_accessible'].include?(role.issues_visibility)
+            condition ||= (author == user) || # user is author
+              user.is_or_belongs_to?(assigned_to) || # user is assign_to issue
+              extra_access_user_ids.include?(user.id) # user has extra access
+          end
 
           if role.issues_visibility == 'issues_tracker_accessible'
             tracker_ids = role.issue_accessible_by_tracker_permission.map(&:to_i).delete_if(&:zero?)
