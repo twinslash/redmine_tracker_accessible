@@ -1,35 +1,47 @@
 # Redmine tracker accessible
 
-Plugin allows to setup trackers for roles. User can create new issues only in selected trackers.
+This plugin limits available trackers for the role and gives access to the issues, as well as gives special access to the issue.
 
-## Install
 
-Clone code of the plugin to folder REDMINE/plugins and run migrations
+## Installation
+
+Clone the code of the plugin to the folder REDMINE/plugins. Run the migrations.
+
 ```bash
 cd REDMINE/plugins
 git clone https://github.com/twinslash/redmine_tracker_accessible.git
 bundle exec rake redmine:plugins:migrate NAME=redmine_tracker_accessible
 ```
-Restart your Redmine
+Restart your server.
 
 
 ## Uninstall
 
-Revert migrations. Remove plugin code.
+Rollback migrations. Remove the plugin.
 ```bash
 cd REDMINE/plugins
 bundle exec rake redmine:plugins:migrate NAME=redmine_tracker_accessible VERSION=0
-rm redmine_tracker_accessible -rf
+rm -rf redmine_tracker_accessible
 ```
-Restart your Redmine
+Restart your server.
 
 
-## Usage
+## Functionality
 
-1. Accessible trackers
-A new multiselect box will appear on page "Administration/Roles and permisions" after installing the plugin. This box contains all trackers. Setup them for each role.
+### Accessible trackers
+A new multiselect box with all trackers will appear on the page "Administration/Roles and permissions" after installing the plugin. Setup the trackers for the role or indicate that all trackers will be accessible (default behavior).
 
-When user creates a new issue only selected trackers will be displayed. If user updates existed issue then selected trackers plus current issue tracker will be accessible. If no trackers is setup for role then all trackers will be accessible.
+![Role settings](https://raw.github.com/twinslash/redmine_tracker_accessible/master/images/role_settings_eng.png)
 
-2. Issue visibility based on available trackers
-A new value "Issues with accessible trackers" will appear on page "Administration/Roles and permisions" in select box "Issues visibility" after installing the plugin. This setting will allow user with this role to get visible permission to issues with listed below ("Accessible trackers") trackers.
+While creating a new issue, the user will have access only to those trackers that you have indicated. If the issue is being edited, then the user will have access only to the indicated trackers and current tracker.
+
+### Visibility based on trackers
+The plugin adds a new value `Issues with accessible trackers` to select "Issues visibility". Selecting it, you’ll get additional multiselect box with current trackers. Indicate the trackers you want to give access to.
+
+
+### Special access
+A new permission `Manage of extra issue access` will appear on the page "Administration/Roles and permissions" after installing the plugin. The role with this permission will manage of extra access to the issue. To perform this you’ll have to open the issue, open the block "Extra access to issue" in the right part of the page - and add a user to the project.
+
+![Extra access](https://raw.github.com/twinslash/redmine_tracker_accessible/master/images/extra_access_eng.png)
+
+The user with extra access will manage to open the issue and will get notifications about changes made in the issue according to his account settings.
