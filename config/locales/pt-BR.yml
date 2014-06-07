@@ -1,0 +1,8 @@
+pt-BR:
+  label_tracker_accessible_permissions: "Tipos de tarefas acessíveis"
+  label_issues_tracker_accessible_watcher: 'Tarefas com tipos acessíveis'
+  label_issue_extra_access: 'Acesso extra a tarefa'
+  label_issue_accessible_by_tracker_permission: 'Tarefas acessíveis pelo tipo'
+  label_allow_all_trackers_permissions: "Todos os tipos de tarefas acessíveis"
+  permission_add_extra_issue_access: 'Adicionar acesso extra a tarefa'
+  permission_tracker_accessible_extra_issue_access: 'Gerenciar acesso extra a tarefa'
